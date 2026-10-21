@@ -1,0 +1,2 @@
+check_interval_sec=5
+log_max_kb=128

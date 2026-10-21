@@ -1,0 +1,8 @@
+#!/bin/sh
+D=${MOCK_DIR:?}
+if [ "$1" = sys.boot_completed ]; then
+  if [ -s "$D/boot_queue" ]; then
+    first=$(head -n 1 "$D/boot_queue"); tail -n +2 "$D/boot_queue" > "$D/boot_queue.t"; mv "$D/boot_queue.t" "$D/boot_queue"
+    echo "$first"
+  else echo 1; fi
+fi

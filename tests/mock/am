@@ -1,0 +1,8 @@
+#!/bin/sh
+D=${MOCK_DIR:?}
+echo "am $*" >> "$D/calls.log"
+if [ -s "$D/am_queue" ]; then
+  first=$(head -n 1 "$D/am_queue"); tail -n +2 "$D/am_queue" > "$D/am_queue.t"; mv "$D/am_queue.t" "$D/am_queue"
+  [ "$first" = fail ] && { echo "Error: boom" >&2; exit 1; }
+fi
+echo "Broadcast completed: result=0"

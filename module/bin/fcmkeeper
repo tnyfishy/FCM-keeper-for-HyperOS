@@ -1,0 +1,41 @@
+#!/system/bin/sh
+case $0 in */*) _d=${0%/*} ;; *) _d=. ;; esac
+MODDIR=$(cd "$_d/.." && pwd)
+. "$MODDIR/lib/common.sh"
+. "$MODDIR/lib/proc.sh"
+. "$MODDIR/lib/millet.sh"
+. "$MODDIR/lib/status.sh"
+fcmk_init_dirs
+cfg_load
+
+do_stop() {
+    lock_stop supervisor supervisor.sh
+    lock_stop worker worker.sh
+}
+
+case $1 in
+    status|'')
+        print_status
+        ;;
+    start)
+        if module_inactive; then
+            echo "Module đang tắt hoặc bị đánh dấu gỡ; không khởi động."
+            exit 1
+        fi
+        ensure_running
+        print_status
+        ;;
+    stop)
+        do_stop
+        echo "Đã yêu cầu dừng supervisor/worker của module."
+        ;;
+    restart)
+        do_stop
+        ensure_running
+        print_status
+        ;;
+    *)
+        echo "Cách dùng: fcmkeeper status|start|stop|restart" >&2
+        exit 2
+        ;;
+esac

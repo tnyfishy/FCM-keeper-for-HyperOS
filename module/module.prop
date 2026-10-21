@@ -1,0 +1,6 @@
+id=fcm_keeper_hyperos
+name=FCM Keeper For HyperOS
+version=v1.0.0
+versionCode=1
+author=tnyfishy
+description=Giữ thiết bị luôn được kết nối với FCM / Keep the device always connected to FCM

@@ -1,0 +1,24 @@
+#!/bin/sh
+D=${MOCK_DIR:?}
+[ "$1" = "--user" ] && shift 2
+op=$1; ns=$2; key=$3
+echo "settings $op $ns $key ${4:+val=$4}" >> "$D/calls.log"
+[ "$ns" = system ] && [ "$key" = MILLET_NO_RESTRICT_APP ] || { echo "mock: unexpected $*" >&2; exit 9; }
+case $op in
+get)
+  if [ -f "$D/always_get_fail" ]; then echo "java.lang.SecurityException: boom" >&2; exit 1; fi
+  if [ -s "$D/get_queue" ]; then
+    first=$(head -n 1 "$D/get_queue"); tail -n +2 "$D/get_queue" > "$D/get_queue.t"; mv "$D/get_queue.t" "$D/get_queue"
+    case $first in
+      fail) echo "boom" >&2; exit 1 ;;
+      set:*) printf '%s\n' "${first#set:}" > "$D/value" ;;
+      unset) rm -f "$D/value" ;;
+    esac
+  fi
+  if [ -f "$D/value" ]; then cat "$D/value"; else echo null; fi ;;
+put)
+  [ -f "$D/put_fail" ] && { echo "put failed" >&2; exit 1; }
+  [ -f "$D/put_noop" ] && exit 0
+  printf '%s\n' "$4" > "$D/value" ;;
+*) exit 9 ;;
+esac
