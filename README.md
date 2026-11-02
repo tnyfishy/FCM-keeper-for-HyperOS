@@ -4,7 +4,7 @@
 
 ## Cài đặt
 
-1. Mở KernelSU Manager → Module → Cài đặt từ bộ nhớ → chọn `FCM-Keeper-For-HyperOS-v*.zip`.
+1. Mở KernelSU Manager → Module → chọn file .zip
 2. Khởi động lại máy.
 
 ## Kiểm tra hoạt động
